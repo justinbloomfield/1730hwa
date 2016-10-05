@@ -1,8 +1,16 @@
 #user inputs datafile, L, mean_vert_disp, and mean_horiz_disp
 
+#assignment of user inputs
+path = input("Please enter the path to the desired data file for analysis:")
+mean_vert = input("Please enter the mean vertical spacing for the provided data file:")
+mean_horiz = input("Please enter the mean horizontal spacing for the provided data file:")
+L = input("Please enter a sea level height for remaining land area analysis:") # should this refer to height or increase?
 
+#assignment of file object to user-provided file
+datafile = open(path, 'r')
+  
 def calc_area(L, mean_vert, mean_horiz):
-	"calculates the area above sea level L, with mean vertical and horizontal spacing given"
+	"calculates the area above sea level L, with mean vertical and horizontal spacing given" #shouldn't this be in triple quotes? ^M
 	count = 0
 	for line in datafile:
 		if line[2] >= 0:
