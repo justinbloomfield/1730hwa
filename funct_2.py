@@ -97,7 +97,7 @@ def print_stuff():
         printpercent = percent_list(index)
         print("At %0.0f metres above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value % (printheight, printarea, printpercent))
         
-        
+print_stuff()
         
 #┌───────────────────┐
 #│ --- Graphing ---  │
