@@ -1,0 +1,2 @@
+Notes:
++ For functionality level 2, the user should be instructed to enter '0' for sea level rise if they do not wish to specify one.

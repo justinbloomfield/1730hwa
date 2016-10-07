@@ -41,7 +41,7 @@ def validate(path): # maybs change this to read from data_list so the file doesn
             else:
                 print("Invalid file format")
                 return False
-    print("Valid file")
+    print("File type validated")
     return True
 
 # validate file
