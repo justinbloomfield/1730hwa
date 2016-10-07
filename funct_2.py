@@ -47,28 +47,47 @@ def validate(path): # maybs change this to read from data_list so the file doesn
 # validate file
 validate(path)
 
-def calc_area(L, mean_vert, mean_horiz):
+def calc_area(mean_vert, mean_horiz):
     """
     calculates the area above sea level L, with mean vertical and horizontal spacing given
     """
     count = 0
     for line in datafile:
         data_list.append(line.split())
-    for item in data_list:
-        if float(item[2]) > L:
-            count += 1
-    area = count * mean_vert * mean_horiz
-    return area
+        height_list = []
+        area_list = []
+    for L in range max_alt:
+        for item in data_list:
+            if float(item[2]) > L:
+                count += 1
+        area = count * mean_vert * mean_horiz
+        height_list.append(L)
+        area_list.append(area)
+    
 
 def disp_result():
-    current = calc_area(0, mean_vert_dist, mean_horiz_dist)
-    absolute = calc_area(sea_rise, mean_vert_dist, mean_horiz_dist)
-    percentage = (absolute/current) * 100
+    percent_list = []
+    for item in area_list:
+        percentage = (item/area_list[0]) * 100
+        percent_list.append(percentage)
+
+        
+#┌───────────────────┐
+#│ --- Graphing ---  │
+#└───────────────────┘
+
+import mathplotlib.pyplot as plt
+calc_area(mean_vert_dist, mean_horiz_dist)
+disp_results()
 
 
-    print("At %0.0f metres above current sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (sea_rise, absolute, percentage))
+plt.title("Sea level rise vs remaining land area")
+plt.xlabel("Sea level rise (m)")
+plt.ylabel("Remaining land area (km^2)"")
+plt.plot(height_list, percent_list, "b")
+plt.show()
 
-disp_result()
+
 
 #┌────────────────┐
 #│ --- HCD4T ---  │
