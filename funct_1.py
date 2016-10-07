@@ -61,7 +61,6 @@ def calc_area(L, mean_vert, mean_horiz):
     return area
 
 def disp_result():
-
     current = calc_area(0, mean_vert_dist, mean_horiz_dist)
     absolute = calc_area(sea_rise, mean_vert_dist, mean_horiz_dist)
     percentage = (absolute/current) * 100
