@@ -10,7 +10,7 @@ import re # for regex checking
 path = input("Please enter the path to the desired data file for analysis: ")
 mean_vert_dist = float(input("Please enter the mean vertical spacing for the provided data file: "))
 mean_horiz_dist = float(input("Please enter the mean horizontal spacing for the provided data file: "))
-sea_rise = float(input("Please enter a sea level height for remaining land area analysis: ")) # should this refer to height or increase?
+sea_rise = float(input("Please enter a sea level height for remaining land area analysis: ")) 
 
 
 #assignment of file object to user-provided file
@@ -45,18 +45,33 @@ def validate(path): # maybs change this to read from data_list so the file doesn
     return True
 
 # validate file
-validate(path)
+#validate(path)
 
 def calc_area(L, mean_vert, mean_horiz):
     """
     calculates the area above sea level L, with mean vertical and horizontal spacing given
     """
+    empty_L = False
+    if L == 0:
+        empty_L = True
+    max_alt = 0
     count = 0
     for line in datafile:
         data_list.append(line.split())
     for item in data_list:
         if float(item[2]) > L:
             count += 1
+            if empty_L == True:
+                if float(item[2]) > max_alt:
+                    max_alt = float(item[2])
+                else:
+                    pass
+                
+    if empty_L == True:
+        step_size = max_alt / 100
+        val = 0
+        while val < max_alt:
+            
     area = count * mean_vert * mean_horiz
     return area
 
