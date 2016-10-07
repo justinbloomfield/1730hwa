@@ -56,7 +56,7 @@ def calc_area(mean_vert, mean_horiz):
         data_list.append(line.split())
         height_list = []
         area_list = []
-    for L in range max_alt:
+    for L in range(max_alt):
         for item in data_list:
             if float(item[2]) > L:
                 count += 1
