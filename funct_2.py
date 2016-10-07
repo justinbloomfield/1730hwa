@@ -76,14 +76,14 @@ def disp_result():
 #│ --- Graphing ---  │
 #└───────────────────┘
 
-import mathplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 calc_area(mean_vert_dist, mean_horiz_dist)
 disp_results()
 
 
 plt.title("Sea level rise vs remaining land area")
 plt.xlabel("Sea level rise (m)")
-plt.ylabel("Remaining land area (km^2)"")
+plt.ylabel("Remaining land area (km^2)")
 plt.plot(height_list, percent_list, "b")
 plt.show()
 
