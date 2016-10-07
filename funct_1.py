@@ -55,7 +55,7 @@ def calc_area(L, mean_vert, mean_horiz):
     for line in datafile:
         data_list.append(line.split())
     for item in data_list:
-        if float(item[2]) >= L:
+        if float(item[2]) > L:
             count += 1
     area = count * mean_vert * mean_horiz
     return area
@@ -67,7 +67,7 @@ def disp_result():
     percentage = (absolute/current) * 100
 
 
-    print("At %0.0f metres above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (sea_rise, absolute, percentage))
+    print("At %0.0f metres above current sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (sea_rise, absolute, percentage))
 
 disp_result()
 
