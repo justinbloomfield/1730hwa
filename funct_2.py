@@ -58,6 +58,7 @@ def calc_area(mean_vert, mean_horiz):
     count = 0
     for line in datafile:
         data_list.append(line.split())
+
     for item in data_list:
         if float(item[2]) > L:
             count += 1
@@ -72,8 +73,6 @@ def calc_area(mean_vert, mean_horiz):
         val = 0
         while val < max_alt:
             
-    area = count * mean_vert * mean_horiz
-    return area
     height_list = []
     area_list = []
     for L in range(0, max_alt, step):
@@ -84,6 +83,7 @@ def calc_area(mean_vert, mean_horiz):
         height_list.append(L)
         area_list.append(area)
 
+    return area
 def disp_result():
     percent_list = []
     for item in area_list:
