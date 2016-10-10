@@ -48,7 +48,7 @@ def validate(path): # maybs change this to read from data_array so the file does
                 print("Invalid file format")
                 return False
     print("Valid file")
-    get_info()
+    get_info() #when file has passed, get data from file
     return True
 
 # validate file
@@ -91,7 +91,7 @@ def zero_rise(L, mean_vert, mean_horiz, array): #sea rise, array of data, height
 
     return height_list, area_list
 
-def tier1_disp_result(L, mean_vert, mean_horiz): # shows function level 1  data.
+def tier1_disp_result(L, mean_vert, mean_horiz): # shows data function level 1
     current = calc_area(0, mean_vert, mean_horiz, data_array)
     absolute = calc_area(L, mean_vert, mean_horiz, data_array)
     percentage = (absolute/current) * 100
@@ -99,14 +99,14 @@ def tier1_disp_result(L, mean_vert, mean_horiz): # shows function level 1  data.
     print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
     return True
 
-def tier2_disp_result():
+def tier2_disp_result(): # shows data for function level 2
 
     height_list, area_list = zero_rise(L, mean_vert, mean_horiz, array)
     graph_plot(height_list, area_list)
 
     return True
 
-def main(L, mean_vert, mean_horiz, array): #put everything together!
+def main(L, mean_vert, mean_horiz, array): # put everything together!
     empty_L = False
 
     if L == 0:
@@ -120,8 +120,7 @@ def main(L, mean_vert, mean_horiz, array): #put everything together!
 
 def graph_plot(al, pl): 
     '''
-    Plots data for function level 2 (this is a shit description and
-    should be fixed
+    Plots data for function level 2. When a zero sea level increase is given, plots the area for a 1% increase in maximum altitude of the land.
     '''
     plt.title("Sea level rise vs remaining land area")
     plt.xlabel("Sea level rise (m)")
@@ -133,6 +132,7 @@ def graph_plot(al, pl):
 #┌──────────────┐
 #│ --- RUN! --- │
 #└──────────────┘
+
 main(sea_rise, mean_vert_dist, mean_horiz_dist, data_array)
 
 
