@@ -32,6 +32,7 @@ def validate(path): # maybs change this to read from data_array so the file does
     """
     Takes the path to the file, and checks that it contains the correct number of entries per line and only valid characters. Quits when file is found to be invalid, stating the error.
     """
+    print("Validating file...")
     valid_chars = re.compile('[0-9\.\-]') # characters 0 through 9 
     with open(path, "r") as test: 
         for line in test: # test each line of file
