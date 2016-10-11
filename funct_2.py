@@ -99,7 +99,7 @@ def tier1_disp_result(L, mean_vert, mean_horiz): # shows data function level 1
     print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
     return True
 
-def tier2_disp_result(): # shows data for function level 2
+def tier2_disp_result(L, mean_vert, mean_horiz, array): # shows data for function level 2
 
     height_list, area_list = zero_rise(L, mean_vert, mean_horiz, array)
     graph_plot(height_list, area_list)
@@ -113,8 +113,7 @@ def main(L, mean_vert, mean_horiz, array): # put everything together!
         empty_L = True
 
     if empty_L == True:
-        height_list, area_list = zero_rise(L, mean_vert, mean_horiz, array)
-        graph_plot(height_list, area_list)
+        tier2_disp_result(L, mean_vert, mean_horiz, array)
     else:
         tier1_disp_result(L, mean_vert, mean_horiz)
 
