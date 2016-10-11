@@ -7,14 +7,14 @@
 import re # for regex checking 
 import numpy as np # linspace, as range() can't use floats
 import matplotlib.pyplot as plt # for graphing
+import math
 
 # user inputs datafile, L, mean_vert_disp, and mean_horiz_disp
 #assignment of user inputs
 path = input("Please enter the path to the desired data file for analysis: ")
-mean_vert_dist = float(input("Please enter the mean vertical spacing for the provided data file: "))
-mean_horiz_dist = float(input("Please enter the mean horizontal spacing for the provided data file: "))
 sea_rise = float(input("Please enter a sea level height for remaining land area analysis: ")) #maybe an exception catcher here if we decide we want to account for user to not enter anything
-
+mean_horiz_dist = spacing(1)
+mean_vert_dist = spacing(0)
 
 #assignment of file object to user-provided file
 datafile = open(path, 'r')
@@ -23,6 +23,24 @@ data_array = []
 #┌───────────────────┐
 #│ --- Functions --- │
 #└───────────────────┘
+
+def spacing(i):
+  diff_list = []
+  col_entries = []
+  for line in datafile:
+    col_entries.append(line[i])
+  for num in range(len(col_entries)-1):
+    difference = col_entries[num] - col_entries[num+1]
+    if difference <= 0:
+      difference *= -1
+    diff_list.append(difference)
+  total = 0
+  for val in diff_list:
+    total += x
+    return total
+  elem_count = len(diff_list)
+  mean_spacing = total/elem_count
+  return mean_spacing
 
 def get_info():
     for line in datafile:
@@ -54,7 +72,6 @@ def validate(path): # maybs change this to read from data_array so the file does
 # validate file
 validate(path)
 
-    
 def calc_area(L, mean_vert, mean_horiz, array):
     """
     calculates the area above sea level L, with mean vertical and horizontal spacing given
@@ -64,9 +81,8 @@ def calc_area(L, mean_vert, mean_horiz, array):
     for item in array:
         if float(item[2]) > L:
             count += 1
-
     area = count * mean_vert * mean_horiz
-    return area
+    return area    
     
 def zero_rise(L, mean_vert, mean_horiz, array): #sea rise, array of data, height list and area list
     '''
@@ -99,12 +115,34 @@ def tier1_disp_result(L, mean_vert, mean_horiz): # shows data function level 1
     print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
     return True
 
-def tier2_disp_result(L, mean_vert, mean_horiz, array): # shows data for function level 2
+def tier2_disp_result(): # shows data for function level 2
 
     height_list, area_list = zero_rise(L, mean_vert, mean_horiz, array)
     graph_plot(height_list, area_list)
 
     return True
+
+#def tier3_disp_result(): #shows data for function level 3
+    
+
+def tier3_calc(L, mean_horiz, mean_vert,array): #shows data for function level 3 ^M
+    latitudes = []
+    widths = []
+    areas = []
+    for item in array:
+        if item[2] > L:
+            latitudes.append(item[0])
+    for lat in latitudes:
+        widths.append(((40075/360)*math.cos(lat))*mean_horiz)
+    height = (40075/360)*mean_vert
+    for width in widths:
+        areas.append(width*height) 
+    total_area = 0
+    for val in areas:
+        total_area += val
+        return total_area
+    #tier3_disp_result()
+    
 
 def main(L, mean_vert, mean_horiz, array): # put everything together!
     empty_L = False
@@ -113,9 +151,11 @@ def main(L, mean_vert, mean_horiz, array): # put everything together!
         empty_L = True
 
     if empty_L == True:
-        tier2_disp_result(L, mean_vert, mean_horiz, array)
+        height_list, area_list = zero_rise(L, mean_vert, mean_horiz, array)
+        graph_plot(height_list, area_list)
     else:
         tier1_disp_result(L, mean_vert, mean_horiz)
+   #invoke function to calculate tier 3
 
 def graph_plot(al, pl): 
     '''
