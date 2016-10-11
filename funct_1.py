@@ -33,7 +33,8 @@ def validate(path): # maybs change this to read from data_list so the file doesn
             blocks = line.split()
             if len(blocks) == 3: # tests for correct number of entries in file
                 for item in blocks:
-                    if valid_chars.match(item): # regex matching
+                    if valid_chars.match(item): # regex matching #Hold on, this doesn't strictly verify that the file is in YXZ format,
+                                                # what if it was actually a XYZ format file? Then it'd be wrong but our checker would accept it
                         pass
                     else:
                         print("Invalid characters")
