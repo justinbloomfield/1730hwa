@@ -13,8 +13,6 @@ import math
 #assignment of user inputs
 path = input("Please enter the path to the desired data file for analysis: ")
 sea_rise = float(input("Please enter a sea level height for remaining land area analysis: ")) #maybe an exception catcher here if we decide we want to account for user to not enter anything
-mean_horiz_dist = spacing(1)
-mean_vert_dist = spacing(0)
 
 #assignment of file object to user-provided file
 datafile = open(path, 'r')
@@ -24,23 +22,28 @@ data_array = []
 #│ --- Functions --- │
 #└───────────────────┘
 
-def spacing(i):
-  diff_list = []
-  col_entries = []
-  for line in datafile:
-    col_entries.append(line[i])
-  for num in range(len(col_entries)-1):
-    difference = col_entries[num] - col_entries[num+1]
-    if difference <= 0:
-      difference *= -1
-    diff_list.append(difference)
-  total = 0
-  for val in diff_list:
-    total += x
-    return total
-  elem_count = len(diff_list)
-  mean_spacing = total/elem_count
-  return mean_spacing
+def spacing(index): # currently not working. Needs to do second approximation as well, which is that arc degree shit.
+    diff_list = []
+    col_entries = []
+
+    for line in datafile:
+        col_entries.append(line[index])
+
+    for num in range(len(col_entries)-1):
+        difference = col_entries[num] - col_entries[num+1]
+        print(difference)
+        if difference <= 0:
+            difference *= -1
+            diff_list.append(difference)
+
+    total = 0
+    for val in diff_list:
+        total += x
+
+    elem_count = len(diff_list)
+    mean_spacing = total/elem_count
+    print(mean_spacing)
+    return mean_spacing
 
 def get_info():
     for line in datafile:
@@ -71,6 +74,10 @@ def validate(path): # maybs change this to read from data_array so the file does
 
 # validate file
 validate(path)
+
+# calculate mean_spacing, maybe include this part in main()?
+mean_horiz_dist = spacing(1)
+mean_vert_dist = spacing(0)
 
 def calc_area(L, mean_vert, mean_horiz, array):
     """
