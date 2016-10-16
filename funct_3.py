@@ -61,17 +61,17 @@ def spacing_first_approx(index): # currently not working.
 
     for entry in data_array:
         col_entries.append(entry[index])
-
-    for num in range(len(col_entries)-1):
-        difference = abs(float(col_entries[num+1])) - abs(float(col_entries[num]))
+    for num in range(len(col_entries)):
+        difference = abs(float(col_entries[num])) - abs(float(col_entries[num-1]))
         if difference < 0:
             difference *= -1
             diff_list.append(difference)
-        elif difference > 0:
+        elif difference >= 0:
             diff_list.append(difference)
     total = sum(diff_list)
     #print(total)
-    print(len(diff_list))
+    #print(len(diff_list))
+    print(sum(diff_list))
     mean_spacing = sum(diff_list) / len(diff_list)
     print(mean_spacing)
     return mean_spacing
@@ -186,12 +186,12 @@ def main(L, mean_vert, mean_horiz, array): # put everything together!
 
     if L == 0:
         empty_L = True
-    tier3_disp_result(L, mean_horiz_dist, mean_vert_dist, array)
+    #tier3_disp_result(L, mean_horiz_dist, mean_vert_dist, array)
     #if empty_L == True:
     #    height_list, area_list = zero_rise(L, mean_vert, mean_horiz, array)
     #    graph_plot(height_list, area_list)
     #else:
-    #    tier1_disp_result(L, mean_vert, mean_horiz)
+    tier1_disp_result(L, mean_vert, mean_horiz)
    #invoke function to calculate tier 3
 
 def graph_plot(al, pl): 
