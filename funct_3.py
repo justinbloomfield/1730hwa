@@ -54,47 +54,32 @@ def validate(path): # maybs change this to read from data_array so the file does
 # validate file
 validate(path)
 
-def spacing_first_approx(index): # currently not working. 
+def spacing(index): # currently not working. 
 
     diff_list = []
     col_entries = []
 
     for entry in data_array:
         col_entries.append(entry[index])
+
     for num in range(len(col_entries)):
         difference = abs(float(col_entries[num])) - abs(float(col_entries[num-1]))
         if difference < 0:
             difference *= -1
             diff_list.append(difference)
-        elif difference >= 0:
+        elif difference > 0:
             diff_list.append(difference)
-    total = sum(diff_list)
-    #print(total)
-    #print(len(diff_list))
-    print(sum(diff_list))
+
     mean_spacing = sum(diff_list) / len(diff_list)
-    print(mean_spacing)
+
+    print("Tot: ",sum(diff_list))
+    print("Mean SP: " , mean_spacing)
     return mean_spacing
-
-#def spacing(index):
-#    entry_list = []
-#    for entry in data_array:
-#        curr = abs(float(entry[index]))
-#        prev = abs(float(entry[index-1]))
-#        diff = curr - prev
-#        entry_list.append(diff)
-#    denom = len(entry_list)
-#                
-#    numer = sum(entry_list)
-#    avg = denom / numer
-#    print(avg)
-
-
 
 
 # calculate mean_spacing, maybe include this part in main()?
-mean_horiz_dist = spacing_first_approx(1)
-mean_vert_dist = spacing_first_approx(0)
+mean_horiz_dist = spacing(1)
+mean_vert_dist = spacing(0)
 
 #mean_horiz_dist = spacing(1)
 #mean_vert_dist = spacing(0)
@@ -157,7 +142,7 @@ def tier3_disp_result(L, mean_vert, mean_horiz, array): #shows data for function
     print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
     return True
 
-def tier3_calc(L, mean_horiz, mean_vert, array): #shows data for function level 3 
+def tier3_calc(L, mean_horiz, mean_vert, array): #shows data for function level 3. This is giving different (maybs not wrong tbh) area outputs
     latitudes = []
     widths = []
     areas = []
@@ -176,7 +161,7 @@ def tier3_calc(L, mean_horiz, mean_vert, array): #shows data for function level 
 
     total_area = abs(sum(areas))
 
-    print(total_area)
+    print("T3TA: " ,total_area)
     return total_area
     #tier3_disp_result()
     
@@ -192,6 +177,7 @@ def main(L, mean_vert, mean_horiz, array): # put everything together!
     #    graph_plot(height_list, area_list)
     #else:
     tier1_disp_result(L, mean_vert, mean_horiz)
+    tier3_calc(L, mean_vert, mean_horiz, data_array)
    #invoke function to calculate tier 3
 
 def graph_plot(al, pl): 
