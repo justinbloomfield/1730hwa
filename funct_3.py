@@ -13,7 +13,7 @@ import math
 #assignment of user inputs
 #path = input("Please enter the path to the desired data file for analysis: ")
 #sea_rise = float(input("Please enter a sea level height for remaining land area analysis: ")) #maybe an exception catcher here if we decide we want to account for user to not enter anything
-path = "data_files/sydney250m.txt"
+path = "data_files/tas2k.txt"
 sea_rise = float(2)
 #assignment of file object to user-provided file
 datafile = open(path, 'r')
@@ -28,13 +28,14 @@ def get_info():
     for line in datafile:
         data_array.append(line.split())
 
-def validate(path): # maybs change this to read from data_array so the file doesn't have to be scanned twice, for speed. Not imperative.
+
+def validate(testing_file): # maybs change this to read from data_array so the file doesn't have to be scanned twice, for speed. Not imperative.
     """
     Takes the path to the file, and checks that it contains the correct number of entries per line and only valid characters. Quits when file is found to be invalid, stating the error.
     """
     print("Validating file...")
     valid_chars = re.compile('[0-9\.\-]') # characters 0 through 9 
-    with open(path, "r") as test: 
+    with open(testing_file, "r") as test: 
         for line in test: # test each line of file
             blocks = line.split()
             if len(blocks) == 3: # tests for correct number of entries in file
@@ -54,6 +55,10 @@ def validate(path): # maybs change this to read from data_array so the file does
 # validate file
 validate(path)
 
+#┌──────────────────────────┐
+#│ here be what ye look for │
+#└──────────────────────────┘
+
 def spacing(index): # currently not working. 
 
     diff_list = []
@@ -65,7 +70,7 @@ def spacing(index): # currently not working.
     for num in range(len(col_entries)):
         difference = abs(float(col_entries[num])) - abs(float(col_entries[num-1]))
         if difference < 0:
-            difference *= -1
+            difference = abs(difference) 
             diff_list.append(difference)
         elif difference > 0:
             diff_list.append(difference)
@@ -119,29 +124,6 @@ def zero_rise(L, mean_vert, mean_horiz, array): #sea rise, array of data, height
 
     return height_list, area_list
 
-def tier1_disp_result(L, mean_vert, mean_horiz): # shows data function level 1
-    current = calc_area(0, mean_vert, mean_horiz, data_array)
-    absolute = calc_area(L, mean_vert, mean_horiz, data_array)
-    percentage = (absolute/current) * 100
-    
-    print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
-    return True
-
-def tier2_disp_result(): # shows data for function level 2
-
-    height_list, area_list = zero_rise(L, mean_vert, mean_horiz, array)
-    graph_plot(height_list, area_list)
-
-    return True
-
-def tier3_disp_result(L, mean_vert, mean_horiz, array): #shows data for function level 3
-    current = tier3_calc(0, mean_vert, mean_horiz, data_array)
-    absolute = tier3_calc(L, mean_vert, mean_horiz, data_array)
-    percentage = (absolute/current) * 100
-    
-    print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
-    return True
-
 def tier3_calc(L, mean_horiz, mean_vert, array): #shows data for function level 3. This is giving different (maybs not wrong tbh) area outputs
     latitudes = []
     widths = []
@@ -163,8 +145,29 @@ def tier3_calc(L, mean_horiz, mean_vert, array): #shows data for function level 
 
     print("T3TA: " ,total_area)
     return total_area
-    #tier3_disp_result()
     
+def tier1_disp_result(L, mean_vert, mean_horiz): # shows data function level 1
+    current = calc_area(0, mean_vert, mean_horiz, data_array)
+    absolute = calc_area(L, mean_vert, mean_horiz, data_array)
+    percentage = (absolute/current) * 100
+    
+    print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
+    return True
+
+def tier2_disp_result(): # shows data for function level 2
+
+    height_list, area_list = zero_rise(L, mean_vert, mean_horiz, array)
+    graph_plot(height_list, area_list)
+
+    return True
+
+def tier3_disp_result(L, mean_vert, mean_horiz, array): #shows data for function level 3
+    current = tier3_calc(0, mean_vert, mean_horiz, data_array)
+    absolute = tier3_calc(L, mean_vert, mean_horiz, data_array)
+    percentage = (absolute/current) * 100
+    
+   # print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
+    return True
 
 def main(L, mean_vert, mean_horiz, array): # put everything together!
     empty_L = False
@@ -176,8 +179,8 @@ def main(L, mean_vert, mean_horiz, array): # put everything together!
     #    height_list, area_list = zero_rise(L, mean_vert, mean_horiz, array)
     #    graph_plot(height_list, area_list)
     #else:
-    tier1_disp_result(L, mean_vert, mean_horiz)
-    tier3_calc(L, mean_vert, mean_horiz, data_array)
+    #tier1_disp_result(L, mean_vert, mean_horiz)
+    tier3_disp_result(L, mean_vert, mean_horiz, data_array)
    #invoke function to calculate tier 3
 
 def graph_plot(al, pl): 
