@@ -60,7 +60,7 @@ validate(path)
 #│ here be what ye look for │
 #└──────────────────────────┘
 
-def spacing(index, direction): # currently not working. 
+def spacing(index): # horizontal currently not working. 
 
     diff_list = []
     col_entries = []
@@ -82,9 +82,9 @@ def spacing(index, direction): # currently not working.
 
     mean_spacing = sum(diff_list) / len(diff_list)
 
-    if direction == "vert":
+    if index == 0: # calculating vertical spacing
         mean_spacing *= (40007/360)
-    #elif direction == "horiz":
+    #elif index == 1: # calculating horizontal spacing
     #    mean_spacing *= (40075/360)
 
     print("MS: " , mean_spacing)
@@ -93,8 +93,8 @@ def spacing(index, direction): # currently not working.
 
 
 # calculate mean_spacing, maybe include this part in main()?
-mean_horiz_dist = spacing(1, "horiz") 
-mean_vert_dist = spacing(0,"vert")
+mean_horiz_dist = spacing(1) 
+mean_vert_dist = spacing(0)
 
 
 def calc_area(L, mean_vert, mean_horiz, array):
