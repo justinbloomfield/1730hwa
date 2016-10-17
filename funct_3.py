@@ -1,4 +1,5 @@
 ####### ------ DO WE NEED TO ACCOUNT FOR NEGATIVE SEA ????
+####### )))))) MAYBS JUST CHECK EVERYTHING IN AS A FLOAT SO THAT WE DON"T HAVE TO KEEP DOING IT LATER IN THE CALCULATIONS"
 
 #┌──────────────┐
 #│ --- Init --- │
@@ -13,7 +14,7 @@ import math
 #assignment of user inputs
 #path = input("Please enter the path to the desired data file for analysis: ")
 #sea_rise = float(input("Please enter a sea level height for remaining land area analysis: ")) #maybe an exception catcher here if we decide we want to account for user to not enter anything
-path = "data_files/tas2k.txt"
+path = "data_files/sydney250m.txt"
 sea_rise = float(2)
 #assignment of file object to user-provided file
 datafile = open(path, 'r')
@@ -59,7 +60,7 @@ validate(path)
 #│ here be what ye look for │
 #└──────────────────────────┘
 
-def spacing(index): # currently not working. 
+def spacing(index, direction): # currently not working. 
 
     diff_list = []
     col_entries = []
@@ -67,27 +68,34 @@ def spacing(index): # currently not working.
     for entry in data_array:
         col_entries.append(entry[index])
 
+
     for num in range(len(col_entries)):
-        difference = abs(float(col_entries[num])) - abs(float(col_entries[num-1]))
-        if difference < 0:
-            difference = abs(difference) 
-            diff_list.append(difference)
-        elif difference > 0:
-            diff_list.append(difference)
+        if num == 0:
+            pass
+        else:
+            difference = abs(float(col_entries[num])) - abs(float(col_entries[num-1]))
+            if difference < 0:
+                difference = abs(difference) 
+                diff_list.append(difference)
+            elif difference > 0:
+                diff_list.append(difference)
 
     mean_spacing = sum(diff_list) / len(diff_list)
 
-    print("Tot: ",sum(diff_list))
-    print("Mean SP: " , mean_spacing)
+    if direction == "vert":
+        mean_spacing *= (40007/360)
+    #elif direction == "horiz":
+    #    mean_spacing *= (40075/360)
+
+    print("MS: " , mean_spacing)
     return mean_spacing
 
 
-# calculate mean_spacing, maybe include this part in main()?
-mean_horiz_dist = spacing(1)
-mean_vert_dist = spacing(0)
 
-#mean_horiz_dist = spacing(1)
-#mean_vert_dist = spacing(0)
+# calculate mean_spacing, maybe include this part in main()?
+mean_horiz_dist = spacing(1, "horiz") 
+mean_vert_dist = spacing(0,"vert")
+
 
 def calc_area(L, mean_vert, mean_horiz, array):
     """
@@ -100,6 +108,27 @@ def calc_area(L, mean_vert, mean_horiz, array):
             count += 1
     area = count * mean_vert * mean_horiz
     return area    
+    
+def tier3_calc(L, mean_horiz, mean_vert, array):
+    lat_list = list()
+    width_list = list()
+    height_list = list()
+    area_list = list()
+    total_area = 0
+
+    for item in array:
+        if float(item[2]) > L:
+            lat_list.append((item[0]))
+        
+    for lat in lat_list:
+        width_list.append((40075/360)*math.cos(math.radians(float(lat)))*mean_horiz)
+
+    for width in width_list:
+        area_list.append(width*mean_vert)
+
+    total_area = sum(area_list)
+    print(total_area)
+    return total_area
     
 def zero_rise(L, mean_vert, mean_horiz, array): #sea rise, array of data, height list and area list
     '''
@@ -124,27 +153,7 @@ def zero_rise(L, mean_vert, mean_horiz, array): #sea rise, array of data, height
 
     return height_list, area_list
 
-def tier3_calc(L, mean_horiz, mean_vert, array): #shows data for function level 3. This is giving different (maybs not wrong tbh) area outputs
-    latitudes = []
-    widths = []
-    areas = []
-    total_area = 0
-
-    for item in array:
-        if float(item[2]) > L:
-            latitudes.append(item[0])
-
-    for lat in latitudes:
-        widths.append(((40075/360)*math.cos(float(lat)))*mean_horiz)
-        height = (40075/360)*mean_vert
-
-    for width in widths:
-        areas.append(width*height) 
-
-    total_area = abs(sum(areas))
-
-    print("T3TA: " ,total_area)
-    return total_area
+    
     
 def tier1_disp_result(L, mean_vert, mean_horiz): # shows data function level 1
     current = calc_area(0, mean_vert, mean_horiz, data_array)
