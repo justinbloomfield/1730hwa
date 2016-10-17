@@ -25,7 +25,7 @@ data_array = []
 #└───────────────────┘
 
 
-def get_info():
+def get_info(): # gets data from file and enters it into an array
     for line in datafile:
         data_array.append(line.split())
 
@@ -56,9 +56,6 @@ def validate(testing_file): # maybs change this to read from data_array so the f
 # validate file
 validate(path)
 
-#┌──────────────────────────┐
-#│ here be what ye look for │
-#└──────────────────────────┘
 
 def spacing(index): # horizontal currently not working. 
 
@@ -109,7 +106,7 @@ def calc_area(L, mean_vert, mean_horiz, array):
     area = count * mean_vert * mean_horiz
     return area    
     
-def tier3_calc(L, mean_horiz, mean_vert, array):
+def tier3_calc(L, mean_horiz, mean_vert, array): # calculates area using arc degrees
     lat_list = list()
     width_list = list()
     height_list = list()
@@ -130,7 +127,7 @@ def tier3_calc(L, mean_horiz, mean_vert, array):
     print(total_area)
     return total_area
     
-def zero_rise(L, mean_vert, mean_horiz, array): #sea rise, array of data, height list and area list
+def zero_rise(L, mean_vert, mean_horiz, array): 
     '''
     performs function level 2 operations (i.e. when no sea rise is given)
     '''
@@ -155,7 +152,7 @@ def zero_rise(L, mean_vert, mean_horiz, array): #sea rise, array of data, height
 
     
     
-def tier1_disp_result(L, mean_vert, mean_horiz): # shows data function level 1
+def tier1_disp_result(L, mean_vert, mean_horiz): # shows data for function level 1
     current = calc_area(0, mean_vert, mean_horiz, data_array)
     absolute = calc_area(L, mean_vert, mean_horiz, data_array)
     percentage = (absolute/current) * 100
