@@ -8,13 +8,13 @@
 import re # for regex checking 
 import numpy as np # linspace, as range() can't use floats
 import matplotlib.pyplot as plt # for graphing
-import math
+import math as mth # for cos and radians -> degrees conversion
 
 # user inputs datafile, L, mean_vert_disp, and mean_horiz_disp
 #assignment of user inputs
 #path = input("Please enter the path to the desired data file for analysis: ")
 #sea_rise = float(input("Please enter a sea level height for remaining land area analysis: ")) #maybe an exception catcher here if we decide we want to account for user to not enter anything
-path = "data_files/sydney250m.txt"
+path = "data_files/tas2k.txt"
 sea_rise = float(2)
 #assignment of file object to user-provided file
 datafile = open(path, 'r')
@@ -61,16 +61,21 @@ def spacing(index): # horizontal currently not working.
 
     diff_list = []
     col_entries = []
+    abs_float = lambda x: abs(float(x))
+    arc_calc = lambda x: (40075/360) * mth.cos(mth.radians(abs_float(x))) 
 
     for entry in data_array:
         col_entries.append(entry[index])
-
 
     for num in range(len(col_entries)):
         if num == 0:
             pass
         else:
-            difference = abs(float(col_entries[num])) - abs(float(col_entries[num-1]))
+            if index == 1: # calculating horizontal spacing
+                difference = (40075/360) * (abs_float(col_entries[num]) - abs_float(col_entries[num-1])) #arc_calc(col_entries[num]) - arc_calc(col_entries[num-1])
+            else:
+                difference = abs_float(col_entries[num]) - abs_float(col_entries[num-1])
+
             if difference < 0:
                 difference = abs(difference) 
                 diff_list.append(difference)
@@ -81,8 +86,8 @@ def spacing(index): # horizontal currently not working.
 
     if index == 0: # calculating vertical spacing
         mean_spacing *= (40007/360)
-    #elif index == 1: # calculating horizontal spacing
-    #    mean_spacing *= (40075/360)
+    elif index == 1:
+        mean_spacing *= mth.cos(mth.radians(mean_spacing))
 
     print("MS: " , mean_spacing)
     return mean_spacing
@@ -118,10 +123,10 @@ def tier3_calc(L, mean_horiz, mean_vert, array): # calculates area using arc deg
             lat_list.append((item[0]))
         
     for lat in lat_list:
-        width_list.append((40075/360)*math.cos(math.radians(float(lat)))*mean_horiz)
+        width_list.append((40075/360)*mth.cos(mth.radians(float(lat)))*mean_vert)
 
     for width in width_list:
-        area_list.append(width*mean_vert)
+        area_list.append(width)#*mean_vert)
 
     total_area = sum(area_list)
     print(total_area)
