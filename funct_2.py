@@ -1,5 +1,3 @@
-####### ------ DO WE NEED TO ACCOUNT FOR NEGATIVE SEA ????
-
 #┌──────────────┐
 #│ --- Init --- │
 #└──────────────┘
