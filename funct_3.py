@@ -9,10 +9,8 @@ import math as mth # for cos and radians -> degrees conversion
 
 # user inputs datafile, L, mean_vert_disp, and mean_horiz_disp
 #assignment of user inputs
-#path = input("Please enter the path to the desired data file for analysis: ")
-#sea_rise = float(input("Please enter a sea level height for remaining land area analysis: ")) #maybe an exception catcher here if we decide we want to account for user to not enter anything
-path = "data_files/sydney250m.txt"
-sea_rise = float(3)
+path = input("Please enter the path to the desired data file for analysis: ")
+sea_rise = float(input("Please enter a sea level height for remaining land area analysis: ")) #maybe an exception catcher here if we decide we want to account for user to not enter anything
 #assignment of file object to user-provided file
 datafile = open(path, 'r')
 data_array = []
