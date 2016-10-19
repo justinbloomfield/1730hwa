@@ -21,7 +21,7 @@ data_array = []
 #└───────────────────┘
 
 
-def get_info(): # gets data from file and enters it into an array
+def get_info(): # gets data from file and enters it into an data_array
     for line in datafile:
         data_array.append(line.split())
 
@@ -81,26 +81,26 @@ mean_horiz_dist = spacing(1)
 mean_vert_dist = spacing(0)
 
 
-def calc_area(L, mean_vert, mean_horiz, array):
+def calc_area(L, mean_vert, mean_horiz, data_array):
     """
     calculates the area above sea level L, with mean vertical and horizontal spacing given
     """
     area = 0
     count = 0
-    for item in array:
+    for item in data_array:
         if float(item[2]) > L:
             count += 1
     area = count * mean_vert * mean_horiz
     return area    
     
-def tier3_calc_area(L, mean_horiz_dist, mean_vert_dist, array): # calculates area using arc degrees
+def tier3_calc_area(L, mean_horiz_dist, mean_vert_dist, data_array): # calculates area using arc degrees
     lat_list = list()
     width_list = list()
     height_list = list()
     area_list = list()
     total_area = 0
 
-    for item in array:
+    for item in data_array:
         if float(item[2]) > L:
             lat_list.append(float(item[0]))
             width_list.append(float(item[1]))
@@ -112,7 +112,7 @@ def tier3_calc_area(L, mean_horiz_dist, mean_vert_dist, array): # calculates are
     print(total_area)
     return total_area
     
-def zero_rise(mean_vert_dist, mean_horiz_dist, array, approximation): 
+def zero_rise(mean_vert_dist, mean_horiz_dist, data_array, approximation): 
     '''
     performs function level 2 operations (i.e. when no sea rise is given)
     '''
@@ -120,7 +120,7 @@ def zero_rise(mean_vert_dist, mean_horiz_dist, array, approximation):
     area_list = []
     max_alt = 0
 
-    for item in array: # find highest altitude in data
+    for item in data_array: # find highest altitude in data
         if float(item[2]) > max_alt:
             max_alt = float(item[2])
 
@@ -131,9 +131,9 @@ def zero_rise(mean_vert_dist, mean_horiz_dist, array, approximation):
 
     for alt in height_list:
         if approximation == 1:
-            area = calc_area(alt, mean_vert_dist, mean_horiz_dist, array)
+            area = calc_area(alt, mean_vert_dist, mean_horiz_dist, data_array)
         else:
-            area = tier3_calc_area(alt, mean_vert_dist, mean_horiz_dist, array)
+            area = tier3_calc_area(alt, mean_vert_dist, mean_horiz_dist, data_array)
         area_list.append(area)
 
     return height_list, area_list
@@ -157,7 +157,7 @@ def tier1_disp_result(L, mean_vert_dist, mean_horiz_dist): # shows data for func
 
 def tier2_disp_result(): # shows data for function level 2
 
-    height_list_1, area_list_1 = zero_rise(mean_vert_dist, mean_horiz_dist, array, 1)
+    height_list_1, area_list_1 = zero_rise(mean_vert_dist, mean_horiz_dist, data_array, 1)
     graph_plot(height_list_1, area_list_1)
     
     height_list_2, area_list_2 = zero_rise(mean_vert_dist, mean_horiz_dist, 2)
@@ -166,14 +166,14 @@ def tier2_disp_result(): # shows data for function level 2
     return True
 
 
-def main(L, mean_vert_dist, mean_horiz_dist, array): # put everything together!
+def main(L, mean_vert_dist, mean_horiz_dist, data_array): # put everything together!
     empty_L = False
 
     if L == 0:
         empty_L = True
-    #tier3_disp_result(L, mean_horiz_dist, mean_vert_dist, array)
+    #tier3_disp_result(L, mean_horiz_dist, mean_vert_dist, data_array)
     #if empty_L == True:
-    #    height_list, area_list = zero_rise(L, mean_vert, mean_horiz, array)
+    #    height_list, area_list = zero_rise(L, mean_vert, mean_horiz, data_array)
     #    graph_plot(height_list, area_list)
     #else:
     tier1_disp_result(L, mean_vert_dist, mean_horiz_dist)
