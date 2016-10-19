@@ -59,25 +59,22 @@ def spacing(index): # horizontal currently not working.
     diff_list = []
     col_entries = []
     abs_float = lambda x: abs(float(x))
-    arc_calc = lambda x: (40075/360) * mth.cos(mth.radians(abs_float(x))) 
+    arc_calc = lambda x: (40075/(2*mth.pi)) * mth.cos(mth.radians(abs_float(x)))
 
     for entry in data_array:
         col_entries.append(entry[index])
 
-    for num in range(len(col_entries)):
-        if num == 0:
-            pass
+    for num in range(1, len(col_entries)):
+        if index == 1: # calculating horizontal spacing
+            difference = abs_float(col_entries[num]) - abs_float(col_entries[num-1]) # this was using arc_calc(), but that wasn't working. 
         else:
-            if index == 1: # calculating horizontal spacing
-                difference = abs_float(col_entries[num]) - abs_float(col_entries[num-1]) # this was using arc_calc(), but that wasn't working. 
-            else:
-                difference = abs_float(col_entries[num]) - abs_float(col_entries[num-1])
-
-            if difference < 0:
-                difference = abs(difference) 
-                diff_list.append(difference)
-            elif difference > 0:
-                diff_list.append(difference)
+            difference = abs_float(col_entries[num]) - abs_float(col_entries[num-1])
+        
+        if difference < 0:
+            difference = abs(difference) 
+            diff_list.append(difference)
+        elif difference > 0:
+            diff_list.append(difference)
 
     mean_spacing = sum(diff_list) / len(diff_list)
 
@@ -119,7 +116,7 @@ def tier3_calc_area(L, mean_horiz, mean_vert, array): # calculates area using ar
             lat_list.append((item[0]))
         
     for lat in lat_list:
-        width_list.append((40075/360)*mth.cos(float(lat))*mean_vert)
+        width_list.append((40075/(2*mth.pi))*mth.cos(mth.radians(float(lat)))*mean_vert)
 
     for width in width_list:
         area_list.append(width)#*mean_vert)
