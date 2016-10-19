@@ -160,7 +160,7 @@ def tier2_disp_result(): # shows data for function level 2
     height_list_1, area_list_1 = zero_rise(mean_vert_dist, mean_horiz_dist, data_array, 1)
     graph_plot(height_list_1, area_list_1)
     
-    height_list_2, area_list_2 = zero_rise(mean_vert_dist, mean_horiz_dist, 2)
+    height_list_2, area_list_2 = zero_rise(mean_vert_dist, mean_horiz_dist, data_array, 2)
     graph_plot(height_list_2, area_list_2)
 
     return True
