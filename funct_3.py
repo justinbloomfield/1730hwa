@@ -85,6 +85,7 @@ def calc_area(L, mean_vert, mean_horiz, data_array):
     """
     calculates the area above sea level L, with mean vertical and horizontal spacing given
     """
+    print(L)
     area = 0
     count = 0
     for item in data_array:
