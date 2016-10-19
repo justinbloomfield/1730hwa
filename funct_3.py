@@ -7,12 +7,15 @@ import numpy as np # linspace, as range() can't use floats
 import matplotlib.pyplot as plt # for graphing
 import math as mth # for cos and radians -> degrees conversion
 
-# user inputs datafile, L, mean_vert_disp, and mean_horiz_disp
+# user inputs datafile, L, user_vert_dist, and user_horiz_dist
 #assignment of user inputs
-path = input("Please enter the path to the desired data file for analysis: ")
+#path = input("Please enter the path to the desired data file for analysis: ")
 sea_rise = float(input("Please enter a sea level height for remaining land area analysis: ")) #maybe an exception catcher here if we decide we want to account for user to not enter anything
 user_vert_dist = float(input("Please enter the mean vertical spacing for the provided data file: "))
 user_horiz_dist = float(input("Please enter the mean horizontal spacing for the provided data file: "))
+
+path = "data_files/sydney250m.txt"
+
 #assignment of file object to user-provided file
 datafile = open(path, 'r')
 data_array = []
@@ -23,7 +26,7 @@ data_array = []
 #└───────────────────┘
 
 
-def get_info(): # gets data from file and enters it into an data_array
+def get_info(): # gets data from file and enters it into an array
     for line in datafile:
         data_array.append(line.split())
 
@@ -59,35 +62,28 @@ def spacing(index): # horizontal currently not working.
 
     diff_list = []
     col_entries = []
-    abs_float = lambda x: abs(float(x))
+    af = lambda x: abs(float(x))
  
     for entry in data_array:
         col_entries.append(entry[index])
 
     for num in range(1, len(col_entries)):
-        if index == 1: # calculating horizontal spacing
-            difference = abs_float(col_entries[num]) - abs_float(col_entries[num-1]) # this was using arc_calc(), but that wasn't working. 
-        else:
-            difference = abs_float(col_entries[num]) - abs_float(col_entries[num-1])
-        
+        difference = af(col_entries[num]) - af(col_entries[num-1])
         diff_list.append(abs(difference))
      
     mean_spacing = sum(diff_list) / len(diff_list)
 
     return mean_spacing
 
-
-
 # calculate mean_spacing, maybe include this part in main()?
 mean_horiz_dist = spacing(1) 
 mean_vert_dist = spacing(0)
 
 
-def calc_area(L, mean_vert, mean_horiz, data_array):
+def calc_area(L, mean_vert, mean_horiz, array):
     """
     calculates the area above sea level L, with mean vertical and horizontal spacing given
     """
-    print(L)
     area = 0
     count = 0
     for item in data_array:
@@ -96,7 +92,8 @@ def calc_area(L, mean_vert, mean_horiz, data_array):
     area = count * mean_vert * mean_horiz
     return area    
     
-def tier3_calc_area(L, mean_horiz_dist, mean_vert_dist, data_array): # calculates area using arc degrees
+
+def tier3_calc_area(L, mean_horiz, mean_vert, array): # calculates area using arc degrees
     lat_list = []
     width_list = []
     height_list = []
@@ -112,10 +109,10 @@ def tier3_calc_area(L, mean_horiz_dist, mean_vert_dist, data_array): # calculate
             area_list.append(width*height)
 
     total_area = sum(area_list)*100
-    print(total_area)
     return total_area
     
-def zero_rise(mean_vert_dist, mean_horiz_dist, data_array, approximation): 
+
+def zero_rise(mean_vert, mean_horiz, array, approximation): 
     '''
     performs function level 2 operations (i.e. when no sea rise is given)
     '''
@@ -132,18 +129,19 @@ def zero_rise(mean_vert_dist, mean_horiz_dist, data_array, approximation):
     for step in step_num:
         height_list.append(step)
 
-    for alt in height_list:
-        if approximation == 1:
+    if approximation == 1: # I split this up for speed reasons. This way it doesn't have to do the check every time it runs the for loop. It's not as neat, but it'll save cycles especially on the bigger files.
+        for alt in height_list:
             area = calc_area(alt, mean_vert_dist, mean_horiz_dist, data_array)
-        else:
+            area_list.append(area)
+    else:
+        for alt in height_list:
             area = tier3_calc_area(alt, mean_vert_dist, mean_horiz_dist, data_array)
-        area_list.append(area)
+            area_list.append(area)
 
     return height_list, area_list
+    
 
-    
-    
-def tier1_disp_result(L, mean_vert_dist, mean_horiz_dist): # shows data for function level 1
+def tier1_disp_result(L, mean_vert, mean_horiz): # shows data for function level 1
     current = calc_area(0, user_vert_dist, user_horiz_dist, data_array)
     absolute = calc_area(L, user_vert_dist, user_horiz_dist, data_array)
     percentage = (absolute/current) * 100
@@ -157,6 +155,7 @@ def tier1_disp_result(L, mean_vert_dist, mean_horiz_dist): # shows data for func
     print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
     return True
 
+
 def tier2_disp_result(): # shows data for function level 2
 
     height_list_1, area_list_1 = zero_rise(mean_vert_dist, mean_horiz_dist, data_array, 1)
@@ -168,19 +167,12 @@ def tier2_disp_result(): # shows data for function level 2
     return True
 
 
-def main(L, mean_vert_dist, mean_horiz_dist, data_array): # put everything together!
-    empty_L = False
+def main(L, mean_vert, mean_horiz, array): # put everything together!
 
-    if L == 0:
-        empty_L = True
-    #tier3_disp_result(L, mean_horiz_dist, mean_vert_dist, data_array)
-    #if empty_L == True:
-    #    height_list, area_list = zero_rise(L, mean_vert, mean_horiz, data_array)
-    #    graph_plot(height_list, area_list)
-    #else:
     tier1_disp_result(L, mean_vert_dist, mean_horiz_dist)
-    tier2_disp_result()
-    #invoke function to calculate tier 3
+    if L == 0:
+           tier2_disp_result()
+
 
 def graph_plot(al, pl): 
     '''
