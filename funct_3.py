@@ -122,7 +122,7 @@ def tier3_calc_area(L, mean_horiz, mean_vert, array): # calculates area using ar
             lat_list.append((item[0]))
         
     for lat in lat_list:
-        width_list.append((40075/360)*mth.cos(mth.radians(float(lat)))*mean_vert)
+        width_list.append((40075/360)*mth.cos(float(lat))*mean_vert)
 
     for width in width_list:
         area_list.append(width)#*mean_vert)
