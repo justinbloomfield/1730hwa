@@ -92,7 +92,7 @@ def calc_area(L, mean_vert, mean_horiz, array):
     area = count * mean_vert * mean_horiz
     return area    
     
-def tier3_calc_area(L, mean_horiz, mean_vert, array): # calculates area using arc degrees
+def tier3_calc_area(L, mean_horiz_dist, mean_vert_dist, array): # calculates area using arc degrees
     lat_list = list()
     width_list = list()
     height_list = list()
@@ -111,7 +111,7 @@ def tier3_calc_area(L, mean_horiz, mean_vert, array): # calculates area using ar
     print(total_area)
     return total_area
     
-def zero_rise(L, mean_vert, mean_horiz, array): 
+def zero_rise(L, mean_vert, mean_horiz, array, approximation): 
     '''
     performs function level 2 operations (i.e. when no sea rise is given)
     '''
@@ -129,7 +129,10 @@ def zero_rise(L, mean_vert, mean_horiz, array):
         height_list.append(step)
 
     for alt in height_list:
-        area = calc_area(alt, mean_vert, mean_horiz, array)
+        if approximation == 1:
+            area = calc_area(alt, mean_vert, mean_horiz, array)
+        else:
+            area = tier3_calc_area(alt, mean_vert_mean_horiz, array)
         area_list.append(area)
 
     return height_list, area_list
@@ -144,20 +147,23 @@ def tier1_disp_result(L, mean_vert, mean_horiz): # shows data for function level
     print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
     return True
 
-def tier2_disp_result(): # shows data for function level 2
-
-    height_list, area_list = zero_rise(L, mean_vert, mean_horiz, array)
-    graph_plot(height_list, area_list)
-
-    return True
-
-def tier3_disp_result(L, mean_vert, mean_horiz, array): #shows data for function level 3
     current = tier3_calc_area(0, mean_vert, mean_horiz, data_array)
     absolute = tier3_calc_area(L, mean_vert, mean_horiz, data_array)
     percentage = (absolute/current) * 100
     
     print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
     return True
+
+def tier2_disp_result(): # shows data for function level 2
+
+    height_list_1, area_list_1 = zero_rise(L, mean_vert, mean_horiz, array, 1)
+    graph_plot(height_list_1, area_list_1)
+    
+    height_list_2, area_list_2 = zero_rise(L, mean_vert_dist, mean_horiz_dist, 2)
+    graph_plot(height_list_2, area_list_2)
+
+    return True
+
 
 def main(L, mean_vert, mean_horiz, array): # put everything together!
     empty_L = False
@@ -170,8 +176,8 @@ def main(L, mean_vert, mean_horiz, array): # put everything together!
     #    graph_plot(height_list, area_list)
     #else:
     tier1_disp_result(L, mean_vert, mean_horiz)
-    tier3_disp_result(L, mean_vert, mean_horiz, data_array)
-   #invoke function to calculate tier 3
+    tier2_disp_result()
+    #invoke function to calculate tier 3
 
 def graph_plot(al, pl): 
     '''
