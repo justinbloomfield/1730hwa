@@ -101,9 +101,9 @@ def tier3_calc_area(L, mean_horiz, mean_vert, array): # calculates area using ar
 
     for item in array:
         if float(item[2]) > L:
-            lat_list.append(item[0])
-            width_list.append(item[1])
-            width = 40075/360 * mth.cos(mth.radians(item[0]))*mean_horiz_dist
+            lat_list.append(float(item[0]))
+            width_list.append(float(item[1]))
+            width = 40075/360 * mth.cos(mth.radians(float(item[0])))*mean_horiz_dist
             height = 40075/360 * mean_vert_dist
             area_list.append(width*height)
 
