@@ -1,6 +1,3 @@
-####### ------ DO WE NEED TO ACCOUNT FOR NEGATIVE SEA ????
-####### )))))) MAYBS JUST CHECK EVERYTHING IN AS A FLOAT SO THAT WE DON"T HAVE TO KEEP DOING IT LATER IN THE CALCULATIONS"
-
 #┌──────────────┐
 #│ --- Init --- │
 #└──────────────┘
