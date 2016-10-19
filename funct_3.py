@@ -158,7 +158,7 @@ def tier3_disp_result(L, mean_vert, mean_horiz, array): #shows data for function
     absolute = tier3_calc_area(L, mean_vert, mean_horiz, data_array)
     percentage = (absolute/current) * 100
     
-   # print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
+    print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
     return True
 
 def main(L, mean_vert, mean_horiz, array): # put everything together!
