@@ -147,7 +147,6 @@ def tier1_disp_result(L, mean_vert_dist, mean_horiz_dist): # shows data for func
     percentage = (absolute/current) * 100
     
     print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
-    return True
 
     current = tier3_calc_area(0, mean_vert_dist, mean_horiz_dist, data_array)
     absolute = tier3_calc_area(L, mean_vert_dist, mean_horiz_dist, data_array)
