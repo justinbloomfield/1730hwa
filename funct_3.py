@@ -27,13 +27,29 @@ data_array = []
 
 
 def get_info(): # gets data from file and enters it into an array
+    '''Fetches each line in YXZ file.
+    
+    Retrieves each line in the YXZ file, which pertain to the latitude, longitude and
+    elevation of a sample point. Splits the values for each line across whitespace, 
+    and appends the three values for each line to an array called data_array. 
+    '''
     for line in datafile:
         data_array.append(line.split())
 
 
 def validate(testing_file): # maybs change this to read from data_array so the file doesn't have to be scanned twice, for speed. Not imperative.
-    """
-    Takes the path to the file, and checks that it contains the correct number of entries per line and only valid characters. Quits when file is found to be invalid, stating the error.
+    """Checks whether the filepath refers to a valid YXZ format file. 
+    
+    Retrieves the file located at the given filepath. Opens that file, and checks that
+    the file contains the correct number of entries per line, and only valid characters
+    in each entry. If the file is found to be invalid, the program quits and states the
+    relevant error.
+    
+    Args:
+        testing_file: The path to the file for validation.
+        
+    Returns:
+        True
     """
     print("Validating file...")
     valid_chars = re.compile('[0-9\.\-]') # characters 0 through 9 
@@ -59,7 +75,9 @@ validate(path)
 
 
 def spacing(index): # horizontal currently not working. 
-
+    '''
+    
+    '''
     diff_list = []
     col_entries = []
     af = lambda x: abs(float(x))
