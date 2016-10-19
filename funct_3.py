@@ -14,8 +14,8 @@ import math as mth # for cos and radians -> degrees conversion
 #assignment of user inputs
 #path = input("Please enter the path to the desired data file for analysis: ")
 #sea_rise = float(input("Please enter a sea level height for remaining land area analysis: ")) #maybe an exception catcher here if we decide we want to account for user to not enter anything
-path = "data_files/tas2k.txt"
-sea_rise = float(2)
+path = "data_files/sydney250m.txt"
+sea_rise = float(3)
 #assignment of file object to user-provided file
 datafile = open(path, 'r')
 data_array = []
@@ -72,7 +72,7 @@ def spacing(index): # horizontal currently not working.
             pass
         else:
             if index == 1: # calculating horizontal spacing
-                difference = (40075/360) * (abs_float(col_entries[num]) - abs_float(col_entries[num-1])) #arc_calc(col_entries[num]) - arc_calc(col_entries[num-1])
+                difference = abs_float(col_entries[num]) - abs_float(col_entries[num-1]) # this was using arc_calc(), but that wasn't working. 
             else:
                 difference = abs_float(col_entries[num]) - abs_float(col_entries[num-1])
 
@@ -87,8 +87,7 @@ def spacing(index): # horizontal currently not working.
     if index == 0: # calculating vertical spacing
         mean_spacing *= (40007/360)
     elif index == 1:
-        mean_spacing *= mth.cos(mth.radians(mean_spacing))
-
+        print("Fuckthisfuckthisfuckthisfuckthisfuckthis")
     print("MS: " , mean_spacing)
     return mean_spacing
 
@@ -111,7 +110,7 @@ def calc_area(L, mean_vert, mean_horiz, array):
     area = count * mean_vert * mean_horiz
     return area    
     
-def tier3_calc(L, mean_horiz, mean_vert, array): # calculates area using arc degrees
+def tier3_calc_area(L, mean_horiz, mean_vert, array): # calculates area using arc degrees
     lat_list = list()
     width_list = list()
     height_list = list()
@@ -173,8 +172,8 @@ def tier2_disp_result(): # shows data for function level 2
     return True
 
 def tier3_disp_result(L, mean_vert, mean_horiz, array): #shows data for function level 3
-    current = tier3_calc(0, mean_vert, mean_horiz, data_array)
-    absolute = tier3_calc(L, mean_vert, mean_horiz, data_array)
+    current = tier3_calc_area(0, mean_vert, mean_horiz, data_array)
+    absolute = tier3_calc_area(L, mean_vert, mean_horiz, data_array)
     percentage = (absolute/current) * 100
     
    # print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
@@ -190,7 +189,7 @@ def main(L, mean_vert, mean_horiz, array): # put everything together!
     #    height_list, area_list = zero_rise(L, mean_vert, mean_horiz, array)
     #    graph_plot(height_list, area_list)
     #else:
-    #tier1_disp_result(L, mean_vert, mean_horiz)
+    tier1_disp_result(L, mean_vert, mean_horiz)
     tier3_disp_result(L, mean_vert, mean_horiz, data_array)
    #invoke function to calculate tier 3
 
