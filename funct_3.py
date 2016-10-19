@@ -15,6 +15,7 @@ sea_rise = float(input("Please enter a sea level height for remaining land area 
 datafile = open(path, 'r')
 data_array = []
 
+
 #┌───────────────────┐
 #│ --- Functions --- │
 #└───────────────────┘
@@ -111,7 +112,7 @@ def tier3_calc_area(L, mean_horiz_dist, mean_vert_dist, array): # calculates are
     print(total_area)
     return total_area
     
-def zero_rise(mean_vert, mean_horiz, array, approximation): 
+def zero_rise(mean_vert_dist, mean_horiz_dist, array, approximation): 
     '''
     performs function level 2 operations (i.e. when no sea rise is given)
     '''
@@ -130,25 +131,25 @@ def zero_rise(mean_vert, mean_horiz, array, approximation):
 
     for alt in height_list:
         if approximation == 1:
-            area = calc_area(alt, mean_vert, mean_horiz, array)
+            area = calc_area(alt, mean_vert_dist, mean_horiz_dist, array)
         else:
-            area = tier3_calc_area(alt, mean_vert_mean_horiz, array)
+            area = tier3_calc_area(alt, mean_vert_dist, mean_horiz_dist, array)
         area_list.append(area)
 
     return height_list, area_list
 
     
     
-def tier1_disp_result(L, mean_vert, mean_horiz): # shows data for function level 1
-    current = calc_area(0, mean_vert, mean_horiz, data_array)
-    absolute = calc_area(L, mean_vert, mean_horiz, data_array)
+def tier1_disp_result(L, mean_vert_dist, mean_horiz_dist): # shows data for function level 1
+    current = calc_area(0, mean_vert_dist, mean_horiz_dist, data_array)
+    absolute = calc_area(L, mean_vert_dist, mean_horiz_dist, data_array)
     percentage = (absolute/current) * 100
     
     print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
     return True
 
-    current = tier3_calc_area(0, mean_vert, mean_horiz, data_array)
-    absolute = tier3_calc_area(L, mean_vert, mean_horiz, data_array)
+    current = tier3_calc_area(0, mean_vert_dist, mean_horiz_dist, data_array)
+    absolute = tier3_calc_area(L, mean_vert_dist, mean_horiz_dist, data_array)
     percentage = (absolute/current) * 100
     
     print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
@@ -156,7 +157,7 @@ def tier1_disp_result(L, mean_vert, mean_horiz): # shows data for function level
 
 def tier2_disp_result(): # shows data for function level 2
 
-    height_list_1, area_list_1 = zero_rise(mean_vert, mean_horiz, array, 1)
+    height_list_1, area_list_1 = zero_rise(mean_vert_dist, mean_horiz_dist, array, 1)
     graph_plot(height_list_1, area_list_1)
     
     height_list_2, area_list_2 = zero_rise(mean_vert_dist, mean_horiz_dist, 2)
@@ -165,7 +166,7 @@ def tier2_disp_result(): # shows data for function level 2
     return True
 
 
-def main(L, mean_vert, mean_horiz, array): # put everything together!
+def main(L, mean_vert_dist, mean_horiz_dist, array): # put everything together!
     empty_L = False
 
     if L == 0:
@@ -175,7 +176,7 @@ def main(L, mean_vert, mean_horiz, array): # put everything together!
     #    height_list, area_list = zero_rise(L, mean_vert, mean_horiz, array)
     #    graph_plot(height_list, area_list)
     #else:
-    tier1_disp_result(L, mean_vert, mean_horiz)
+    tier1_disp_result(L, mean_vert_dist, mean_horiz_dist)
     tier2_disp_result()
     #invoke function to calculate tier 3
 
