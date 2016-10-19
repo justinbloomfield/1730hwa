@@ -11,6 +11,8 @@ import math as mth # for cos and radians -> degrees conversion
 #assignment of user inputs
 path = input("Please enter the path to the desired data file for analysis: ")
 sea_rise = float(input("Please enter a sea level height for remaining land area analysis: ")) #maybe an exception catcher here if we decide we want to account for user to not enter anything
+user_vert_dist = float(input("Please enter the mean vertical spacing for the provided data file: "))
+user_horiz_dist = float(input("Please enter the mean horizontal spacing for the provided data file: "))
 #assignment of file object to user-provided file
 datafile = open(path, 'r')
 data_array = []
@@ -95,10 +97,10 @@ def calc_area(L, mean_vert, mean_horiz, data_array):
     return area    
     
 def tier3_calc_area(L, mean_horiz_dist, mean_vert_dist, data_array): # calculates area using arc degrees
-    lat_list = list()
-    width_list = list()
-    height_list = list()
-    area_list = list()
+    lat_list = []
+    width_list = []
+    height_list = []
+    area_list = []
     total_area = 0
 
     for item in data_array:
@@ -106,10 +108,10 @@ def tier3_calc_area(L, mean_horiz_dist, mean_vert_dist, data_array): # calculate
             lat_list.append(float(item[0]))
             width_list.append(float(item[1]))
             width = 40075/360 * mth.cos(mth.radians(float(item[0])))*mean_horiz_dist
-            height = 40075/360 * mean_vert_dist
+            height = 40007/360 * mean_vert_dist
             area_list.append(width*height)
 
-    total_area = sum(area_list)
+    total_area = sum(area_list)*100
     print(total_area)
     return total_area
     
@@ -142,8 +144,8 @@ def zero_rise(mean_vert_dist, mean_horiz_dist, data_array, approximation):
     
     
 def tier1_disp_result(L, mean_vert_dist, mean_horiz_dist): # shows data for function level 1
-    current = calc_area(0, mean_vert_dist, mean_horiz_dist, data_array)
-    absolute = calc_area(L, mean_vert_dist, mean_horiz_dist, data_array)
+    current = calc_area(0, user_vert_dist, user_horiz_dist, data_array)
+    absolute = calc_area(L, user_vert_dist, user_horiz_dist, data_array)
     percentage = (absolute/current) * 100
     
     print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
