@@ -146,23 +146,23 @@ def tier1_disp_result(L, mean_vert, mean_horiz): # shows data for function level
     absolute = calc_area(L, user_vert_dist, user_horiz_dist, data_array)
     percentage = (absolute/current) * 100
     
-    print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
+    print("First Approximation: At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value\n" % (L, absolute, percentage))
 
     current = tier3_calc_area(0, mean_vert_dist, mean_horiz_dist, data_array)
     absolute = tier3_calc_area(L, mean_vert_dist, mean_horiz_dist, data_array)
     percentage = (absolute/current) * 100
     
-    print("At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value" % (L, absolute, percentage))
+    print("Second Approximation: At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value\n" % (L, absolute, percentage))
     return True
 
 
 def tier2_disp_result(): # shows data for function level 2
 
     height_list_1, area_list_1 = zero_rise(mean_vert_dist, mean_horiz_dist, data_array, 1)
-    graph_plot(height_list_1, area_list_1)
+    graph_plot(height_list_1, area_list_1, 1)
     
     height_list_2, area_list_2 = zero_rise(mean_vert_dist, mean_horiz_dist, data_array, 2)
-    graph_plot(height_list_2, area_list_2)
+    graph_plot(height_list_2, area_list_2, 2)
 
     return True
 
@@ -174,11 +174,14 @@ def main(L, mean_vert, mean_horiz, array): # put everything together!
            tier2_disp_result()
 
 
-def graph_plot(al, pl): 
+def graph_plot(al, pl, approximation): 
     '''
     Plots data for function level 2. When a zero sea level increase is given, plots the area for a 1% increase in maximum altitude of the land.
     '''
-    plt.title("Sea level rise vs remaining land area")
+    if approximation == 1:
+        plt.title("Sea level rise vs remaining land area (First Approximation)")
+    else:
+        plt.title("Sea level rise vs remaining land area (Second Approximation)")
     plt.xlabel("Sea level rise (m)")
     plt.ylabel("Remaining land area (km^2)")
     plt.plot(al, pl, "b")
