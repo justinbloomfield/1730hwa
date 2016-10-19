@@ -111,7 +111,7 @@ def tier3_calc_area(L, mean_horiz_dist, mean_vert_dist, array): # calculates are
     print(total_area)
     return total_area
     
-def zero_rise(L, mean_vert, mean_horiz, array, approximation): 
+def zero_rise(mean_vert, mean_horiz, array, approximation): 
     '''
     performs function level 2 operations (i.e. when no sea rise is given)
     '''
@@ -156,10 +156,10 @@ def tier1_disp_result(L, mean_vert, mean_horiz): # shows data for function level
 
 def tier2_disp_result(): # shows data for function level 2
 
-    height_list_1, area_list_1 = zero_rise(L, mean_vert, mean_horiz, array, 1)
+    height_list_1, area_list_1 = zero_rise(mean_vert, mean_horiz, array, 1)
     graph_plot(height_list_1, area_list_1)
     
-    height_list_2, area_list_2 = zero_rise(L, mean_vert_dist, mean_horiz_dist, 2)
+    height_list_2, area_list_2 = zero_rise(mean_vert_dist, mean_horiz_dist, 2)
     graph_plot(height_list_2, area_list_2)
 
     return True
