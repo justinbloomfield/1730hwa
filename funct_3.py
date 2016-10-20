@@ -277,7 +277,11 @@ def graph_plot(heights, areas, approximation):
     plt.show()
 
 def main(L, mean_vert, mean_horiz, array): 
-    """Decides whether first or second functionality is required.
+    """Decides what functionality is required.
+    
+    Functionality level 1 is always run, but
+    functionality level 2 is only run if L has 
+    the value of 0. 
     
     Args:
         L: A numeric value representing sea level rise. 
