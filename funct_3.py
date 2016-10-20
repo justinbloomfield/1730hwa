@@ -9,12 +9,11 @@ import math as mth # for cos and radians -> degrees conversion
 
 # user inputs datafile, L, user_vert_dist, and user_horiz_dist
 #assignment of user inputs
-#path = input("Please enter the path to the desired data file for analysis: ")
+path = input("Please enter the path to the desired data file for analysis: ")
 sea_rise = float(input("Please enter a sea level height for remaining land area analysis: ")) #maybe an exception catcher here if we decide we want to account for user to not enter anything
-user_vert_dist = float(input("Please enter the mean vertical spacing for the provided data file: "))
-user_horiz_dist = float(input("Please enter the mean horizontal spacing for the provided data file: "))
 
-path = "data_files/sydney250m.txt"
+
+#path = "data_files/sydney250m.txt"
 
 #assignment of file object to user-provided file
 datafile = open(path, 'r')
@@ -27,12 +26,12 @@ data_array = []
 
 
 def get_info(): # gets data from file and enters it into an array
-    '''Fetches each line in YXZ file.
+    """Fetches each line in YXZ file.
     
     Retrieves each line in the YXZ file, which pertain to the latitude, longitude and
     elevation of a sample point. Splits the values for each line across whitespace, 
     and appends the three values for each line to an array called data_array. 
-    '''
+    """
     for line in datafile:
         data_array.append(line.split())
 
@@ -75,9 +74,19 @@ validate(path)
 
 
 def spacing(index): # horizontal currently not working. 
-    '''
+    """Calculates mean spacing between data values in input data file.
     
-    '''
+    Finds the mean spacing between data values in a certain column of
+    the input data file. 
+    
+    Args:
+        index: An integer value of 0, 1, 2 representing the index of the
+        column containing data values for which mean spacing is required 
+    
+    Returns:
+        A float value pertaining to the mean spacing between data values
+        in the column whose index is taken as argument. 
+    """
     diff_list = []
     col_entries = []
     af = lambda x: abs(float(x))
@@ -99,8 +108,16 @@ mean_vert_dist = spacing(0)
 
 
 def calc_area(L, mean_vert, mean_horiz, array):
-    """
-    calculates the area above sea level L, with mean vertical and horizontal spacing given
+    """Calculates areas required for the first approximation.
+    
+    Args:
+        L: A numeric value representing sea level rise. 
+        mean_vert: The numeric value for mean vertical spacing of
+            data values in input data file.
+        mean_horiz: The numeric value for mean horizontal spacing 
+            of data values in input data file.
+        array: The array containing 
+    
     """
     area = 0
     count = 0
@@ -160,8 +177,8 @@ def zero_rise(mean_vert, mean_horiz, array, approximation):
     
 
 def tier1_disp_result(L, mean_vert, mean_horiz): # shows data for function level 1
-    current = calc_area(0, user_vert_dist, user_horiz_dist, data_array)
-    absolute = calc_area(L, user_vert_dist, user_horiz_dist, data_array)
+    current = calc_area(0, mean_vert_dist, mean_horiz_dist, data_array)
+    absolute = calc_area(L, mean_vert_dist, mean_horiz_dist, data_array)
     percentage = (absolute/current) * 100
     
     print("First Approximation: At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value\n" % (L, absolute, percentage))
