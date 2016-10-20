@@ -108,7 +108,7 @@ mean_vert_dist = spacing(0)
 
 
 def calc_area(L, mean_vert, mean_horiz, array):
-    """Calculates areas required for the first approximation.
+    """Finds land area, as per first approximation.
     
     Args:
         L: A numeric value representing sea level rise. 
@@ -116,8 +116,13 @@ def calc_area(L, mean_vert, mean_horiz, array):
             data values in input data file.
         mean_horiz: The numeric value for mean horizontal spacing 
             of data values in input data file.
-        array: The array containing 
-    
+        array: The array containing line-split data values
+            from the input data file.
+            
+    Returns:
+        A float value representing the absolute area of land above sea 
+        level (in square kilometres) for a given value of L, as per the
+        first approximation. 
     """
     area = 0
     count = 0
@@ -129,6 +134,23 @@ def calc_area(L, mean_vert, mean_horiz, array):
     
 
 def tier3_calc_area(L, mean_horiz, mean_vert, array): # calculates area using arc degrees
+    """Finds land area, as per second approximation. 
+    
+    Args:
+        L: A numeric value representing sea level rise. 
+        mean_vert: The numeric value for mean vertical spacing of
+            data values in input data file.
+        mean_horiz: The numeric value for mean horizontal spacing 
+            of data values in input data file.
+        array: The array containing line-split data values
+            from the input data file.
+    
+    Returns:
+        A float value representing the absolute area of land above sea 
+        level (in square kilometres) for a given value of L, as per the
+        second approximation.
+    """
+    
     lat_list = []
     width_list = []
     height_list = []
@@ -148,9 +170,33 @@ def tier3_calc_area(L, mean_horiz, mean_vert, array): # calculates area using ar
     
 
 def zero_rise(mean_vert, mean_horiz, array, approximation): 
-    '''
-    performs function level 2 operations (i.e. when no sea rise is given)
-    '''
+    """Calculates land areas for a range of sea level increases
+    
+    Generates the remaining land areas, given sea level rises 
+    at 1% increments of the highest elevation in the input data
+    file. 
+    
+    Args:
+       mean_vert: The numeric value for mean vertical spacing of
+           data values in input data file.
+       mean_horiz: The numeric value for mean horizontal spacing 
+           of data values in input data file.
+       array: The array containing line-split data values
+           from the input data file. 
+       approximation: an integer value of 1 or 2, so that remaining 
+           land areas are calculated using the respective
+           area approximation function.
+     
+     Returns:
+         height_list: A list of elevations, representing the elevation
+            at 1% increments of the highest elevation in the input
+            data file.
+         area_list: A list of areas, calculated for the relevant 
+            approximation, which match the respective elevation value
+            in height_list. 
+    
+    
+    """
     height_list = []
     area_list = []
     max_alt = 0
