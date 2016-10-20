@@ -206,14 +206,3 @@ def graph_plot(heights, areas):
 #└──────────────┘
 
 main(sea_rise, mean_vert_dist, mean_horiz_dist, data_array)
-
-
-
-#┌────────────────┐
-#│ --- HCD4T ---  │
-#└────────────────┘
-
-#datafile = open("data_files/sydney250m.txt","r")
-#mean_vert_dist = 0.278
-#mean_horiz_dist = 0.231
-#sea_rise = 13.000
