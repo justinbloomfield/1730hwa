@@ -211,7 +211,7 @@ def zero_rise(mean_vert, mean_horiz, array, approximation):
        mean_horiz: The numeric value for mean horizontal spacing 
            of data values in datafile.
        array: The array containing line-split data values
-           from the input datafile. 
+           from the datafile. 
        approximation: an integer value of 1 or 2, so that remaining 
            land areas are calculated using the respective
            area approximation function.
@@ -290,6 +290,13 @@ def tier2_disp_result():
 
 
 def tier4_island(L, array):
+    """Computes the number of distinct islands for a given sea level rise.
+    
+    Args:
+        L: A numeric value representing sea level rise. 
+        array: The array containing line-split data values
+           from the datafile.
+    """
     #first, re-arrange the data.
     altgrid = []
     littlelist = [] #used throughout this section as a means of collecting and conveying data
@@ -323,7 +330,7 @@ def tier4_island(L, array):
                 if float(elem) > L:
                     for island in islandlist:
                         for point in island:
-                            if abs(indexing[0] - point[0]) < 2 and abs(indexing[1] - point[1]) < 2: #is connected
+                            if abs(indexing[0] - point[0]) < 2 and abs(indexing[1] - point[1]) < 2: #work out if points are connected
                                 island.append(indexing)
                                 break
                             else:
