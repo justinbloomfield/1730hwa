@@ -46,9 +46,6 @@ def validate(testing_file): # maybs change this to read from data_array so the f
     
     Args:
         testing_file: The path to the file for validation.
-        
-    Returns:
-        True
     """
     print("Validating file...")
     valid_chars = re.compile('[0-9\.\-]') # characters 0 through 9 
@@ -109,10 +106,10 @@ def fa_spacing(index):
 
 
 def spacing(index): # horizontal currently not working. 
-    """Calculates mean spacing between data values in input data file.
+    """Calculates mean spacing between data values in datafile.
     
     Finds the mean spacing between data values in a certain column of
-    the input data file. 
+    datafile. 
     
     Args:
         index: An integer value of 0, 1, 2 representing the index of the
@@ -145,16 +142,21 @@ mean_vert_dist = spacing(0)
 
 
 def calc_area(L, mean_vert, mean_horiz, array):
-    """Calculates areas required for the first approximation.
+    """Finds land area, as per first approximation.
     
     Args:
         L: A numeric value representing sea level rise. 
         mean_vert: The numeric value for mean vertical spacing of
-            data values in input data file.
+            data values in datafile.
         mean_horiz: The numeric value for mean horizontal spacing 
-            of data values in input data file.
-        array: The array containing 
-    
+            of data values in datafile.
+        array: The array containing line-split data values
+            from datafile.
+            
+    Returns:
+        A float value representing the absolute area of land above sea 
+        level (in square kilometres) for a given value of L, as per the
+        first approximation. 
     """
     area = 0
     count = 0
@@ -166,6 +168,23 @@ def calc_area(L, mean_vert, mean_horiz, array):
     
 
 def tier3_calc_area(L, mean_horiz, mean_vert, array): # calculates area using arc degrees
+    """Finds land area, as per second approximation. 
+    
+    Args:
+        L: A numeric value representing sea level rise. 
+        mean_vert: The numeric value for mean vertical spacing of
+            data values in datafile.
+        mean_horiz: The numeric value for mean horizontal spacing 
+            of data values in datafile.
+        array: The array containing line-split data values
+            from the datafile.
+    
+    Returns:
+        A float value representing the absolute area of land above sea 
+        level (in square kilometres) for a given value of L, as per the
+        second approximation.
+    """
+    
     lat_list = []
     width_list = []
     height_list = []
@@ -185,9 +204,29 @@ def tier3_calc_area(L, mean_horiz, mean_vert, array): # calculates area using ar
     
 
 def zero_rise(mean_vert, mean_horiz, array, approximation): 
-    '''
-    performs function level 2 operations (i.e. when no sea rise is given)
-    '''
+    """Calculates land areas for a range of sea level increases
+    
+    Generates the remaining land areas, given sea level rises 
+    at 1% increments of the highest elevation in the datafile. 
+    
+    Args:
+       mean_vert: The numeric value for mean vertical spacing of
+           data values in datafile.
+       mean_horiz: The numeric value for mean horizontal spacing 
+           of data values in datafile.
+       array: The array containing line-split data values
+           from the input datafile. 
+       approximation: an integer value of 1 or 2, so that remaining 
+           land areas are calculated using the respective
+           area approximation function.
+     
+     Returns:
+         height_list: A list of elevations, representing the elevation
+            at 1% increments of the highest elevation in datafile.
+         area_list: A list of areas, calculated for the relevant 
+            approximation, which match the respective elevation value
+            in height_list. 
+    """
     height_list = []
     area_list = []
     max_alt = 0
@@ -214,6 +253,16 @@ def zero_rise(mean_vert, mean_horiz, array, approximation):
     
 
 def tier1_disp_result(L, mean_vert, mean_horiz): # shows data for function level 1
+    """Displays output for functionality level 1.
+    
+    Prints the required output for both the first and second approximations    
+    Args:
+        L: A numeric value representing sea level rise. 
+        mean_vert: The numeric value for mean vertical spacing of
+            data values in datafile.
+        mean_horiz: The numeric value for mean horizontal spacing 
+            of data values in datafile.   
+    """
     current = calc_area(0, mean_vert_dist_fa, mean_horiz_dist_fa, data_array)
     absolute = calc_area(L, mean_vert_dist_fa, mean_horiz_dist_fa, data_array)
     percentage = (absolute/current) * 100
@@ -228,8 +277,13 @@ def tier1_disp_result(L, mean_vert, mean_horiz): # shows data for function level
     return True
 
 
-def tier2_disp_result(): # shows data for function level 2
-
+def tier2_disp_result():
+    """Plots graphs for functionality level 2.
+    
+    Displays two graphs for functionality level 2, one for each of 
+    the first and second approximations.
+    """
+    
     height_list_1, area_list_1 = zero_rise(mean_vert_dist_fa, mean_horiz_dist_fa, data_array, 1)
     graph_plot(height_list_1, area_list_1, 1)
     
@@ -238,41 +292,52 @@ def tier2_disp_result(): # shows data for function level 2
 
     return True
 
-
-def main(L, mean_vert, mean_horiz, array): # put everything together!
-    tier1_disp_result(L, mean_vert_dist_fa, mean_horiz_dist_fa)
-    if L == 0:
-           tier2_disp_result()
-
-    return True # function exits cleanly
-
-def graph_plot(al, pl, approximation): 
-    '''
-    Plots data for function level 2. When a zero sea level increase is given, plots the area for a 1% increase in maximum altitude of the land.
-    '''
+def graph_plot(heights, areas, approximation): 
+    """Generates graph for functionality level 2.
+    
+    Generates a graph for sea level rise against remaining sea level rise, 
+    for the respective approximation provided.
+    
+    Args:
+        heights: The list of heights, at 1% increments of the highest elevation
+        in datafile.
+        areas: The remaining land area associated with each elevation level in
+        heights.
+    """
     if approximation == 1:
         plt.title("Sea level rise vs remaining land area (First Approximation)")
     else:
         plt.title("Sea level rise vs remaining land area (Second Approximation)")
     plt.xlabel("Sea level rise (m)")
     plt.ylabel("Remaining land area (km^2)")
-    plt.plot(al, pl, "b")
+    plt.plot(heights, areas, "b")
     plt.show()
 
-        
+def main(L, mean_vert, mean_horiz, array): 
+    """Decides what functionality is required.
+    
+    Functionality level 1 is always run, but
+    functionality level 2 is only run if L has 
+    the value of 0. 
+    
+    Args:
+        L: A numeric value representing sea level rise. 
+        mean_vert: The numeric value for mean vertical spacing of
+            data values in input data file.
+        mean_horiz: The numeric value for mean horizontal spacing 
+            of data values in input data file.
+        array: The array containing line-split data values
+            from the input data file.
+    """
+
+    tier1_disp_result(L, mean_vert_dist_fa, mean_horiz_dist_fa)
+    if L == 0:
+           tier2_disp_result()
+            
+    return True
+
 #┌──────────────┐
 #│ --- RUN! --- │
 #└──────────────┘
 
 main(sea_rise, mean_vert_dist, mean_horiz_dist, data_array)
-
-
-
-#┌────────────────┐
-#│ --- HCD4T ---  │
-#└────────────────┘
-
-#datafile = open("data_files/sydney250m.txt","r")
-#mean_vert_dist = 0.278
-#mean_horiz_dist = 0.231
-#sea_rise = 13.000
