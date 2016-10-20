@@ -9,11 +9,11 @@ import math as mth # for cos and radians -> degrees conversion
 
 # user inputs datafile, L, user_vert_dist, and user_horiz_dist
 #assignment of user inputs
-path = input("Please enter the path to the desired data file for analysis: ")
+#path = input("Please enter the path to the desired data file for analysis: ")
 sea_rise = float(input("Please enter a sea level height for remaining land area analysis: ")) #maybe an exception catcher here if we decide we want to account for user to not enter anything
 
 
-#path = "data_files/sydney250m.txt"
+path = "data_files/sydney250m.txt"
 
 #assignment of file object to user-provided file
 datafile = open(path, 'r')
@@ -24,7 +24,7 @@ data_array = []
 #│ --- Functions --- │
 #└───────────────────┘
 
-
+    
 def get_info(): # gets data from file and enters it into an array
     """Fetches each line in YXZ file.
     
@@ -65,12 +65,47 @@ def validate(testing_file): # maybs change this to read from data_array so the f
             else:
                 print("Invalid file format")
                 return False
-    print("Valid file")
+    print("Valid file\n")
     get_info() # when file has passed, get data from file
     return True
 
 # validate file
 validate(path)
+
+def fa_spacing(index):
+
+    diff_list = []
+    col_entries = []
+    af = lambda x: abs(float(x))
+ 
+    for entry in data_array:
+        col_entries.append(float(entry[index]))
+        
+    avg_lat = sum(col_entries)/len(col_entries)
+
+    if index == 1:
+        for num in range(1, len(col_entries)):
+            difference = (af(col_entries[num]) - af(col_entries[num-1])) * (40075/360) #* )
+            if difference == 0:
+                pass
+            else:
+                diff_list.append(abs(difference))
+    else:
+        for num in range(1, len(col_entries)):
+            difference = af(col_entries[num]) - af(col_entries[num-1])
+            if difference == 0:
+                pass
+            else:
+                diff_list.append(abs(difference))
+     
+    mean_spacing = sum(diff_list) / len(diff_list)
+
+    if index == 0:
+        mean_spacing = mean_spacing * (40007/360)
+    else:
+        mean_spacing *= mth.cos(mth.radians(abs(avg_lat))) / 2.1137050975
+
+    return abs(mean_spacing)
 
 
 def spacing(index): # horizontal currently not working. 
@@ -103,6 +138,8 @@ def spacing(index): # horizontal currently not working.
     return mean_spacing
 
 # calculate mean_spacing, maybe include this part in main()?
+mean_horiz_dist_fa = fa_spacing(1)
+mean_vert_dist_fa = fa_spacing(0)
 mean_horiz_dist = spacing(1) 
 mean_vert_dist = spacing(0)
 
@@ -164,9 +201,9 @@ def zero_rise(mean_vert, mean_horiz, array, approximation):
     for step in step_num:
         height_list.append(step)
 
-    if approximation == 1: # I split this up for speed reasons. This way it doesn't have to do the check every time it runs the for loop. It's not as neat, but it'll save cycles especially on the bigger files.
+    if approximation == 1: 
         for alt in height_list:
-            area = calc_area(alt, mean_vert_dist, mean_horiz_dist, data_array)
+            area = calc_area(alt, mean_vert_dist_fa, mean_horiz_dist_fa, data_array)
             area_list.append(area)
     else:
         for alt in height_list:
@@ -177,11 +214,11 @@ def zero_rise(mean_vert, mean_horiz, array, approximation):
     
 
 def tier1_disp_result(L, mean_vert, mean_horiz): # shows data for function level 1
-    current = calc_area(0, mean_vert_dist, mean_horiz_dist, data_array)
-    absolute = calc_area(L, mean_vert_dist, mean_horiz_dist, data_array)
+    current = calc_area(0, mean_vert_dist_fa, mean_horiz_dist_fa, data_array)
+    absolute = calc_area(L, mean_vert_dist_fa, mean_horiz_dist_fa, data_array)
     percentage = (absolute/current) * 100
     
-    print("First Approximation: At %0.0f metre(s) above sea level, there will be %0.3f square kilometres of land, which is %0.3f percent of the current value\n" % (L, absolute, percentage))
+    print("First Approximation: At %0.0f metre(s) above sea level, there will be %0.9f square kilometres of land, which is %0.3f percent of the current value\n" % (L, absolute, percentage))
 
     current = tier3_calc_area(0, mean_vert_dist, mean_horiz_dist, data_array)
     absolute = tier3_calc_area(L, mean_vert_dist, mean_horiz_dist, data_array)
@@ -193,7 +230,7 @@ def tier1_disp_result(L, mean_vert, mean_horiz): # shows data for function level
 
 def tier2_disp_result(): # shows data for function level 2
 
-    height_list_1, area_list_1 = zero_rise(mean_vert_dist, mean_horiz_dist, data_array, 1)
+    height_list_1, area_list_1 = zero_rise(mean_vert_dist_fa, mean_horiz_dist_fa, data_array, 1)
     graph_plot(height_list_1, area_list_1, 1)
     
     height_list_2, area_list_2 = zero_rise(mean_vert_dist, mean_horiz_dist, data_array, 2)
@@ -203,11 +240,11 @@ def tier2_disp_result(): # shows data for function level 2
 
 
 def main(L, mean_vert, mean_horiz, array): # put everything together!
-
-    tier1_disp_result(L, mean_vert_dist, mean_horiz_dist)
+    tier1_disp_result(L, mean_vert_dist_fa, mean_horiz_dist_fa)
     if L == 0:
            tier2_disp_result()
 
+    return True # function exits cleanly
 
 def graph_plot(al, pl, approximation): 
     '''
