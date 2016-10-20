@@ -164,7 +164,7 @@ def zero_rise(mean_vert, mean_horiz, array, approximation):
     for step in step_num:
         height_list.append(step)
 
-    if approximation == 1: # I split this up for speed reasons. This way it doesn't have to do the check every time it runs the for loop. It's not as neat, but it'll save cycles especially on the bigger files.
+    if approximation == 1:
         for alt in height_list:
             area = calc_area(alt, mean_vert_dist, mean_horiz_dist, data_array)
             area_list.append(area)
@@ -201,12 +201,58 @@ def tier2_disp_result(): # shows data for function level 2
 
     return True
 
+def tier4_island(L, array):
+    #first, re-arrange the data.
+    altgrid = []
+    littlelist = [] #used throughout this section as a means of collecting and conveying data
+    current_lat = array[0][0]
+    for line in array:
+        if line[0] == current_lat:
+            littlelist.append(line[2])
+        else:
+            altgrid.append(list(littlelist))
+            littlelist = list()
+            current_lat = line[0]
+            littlelist.append(line[2])
+    altgrid.append(list(littlelist))
+
+    #now, rearrange our points into island groups
+    littlelist = []
+    islandlist = []
+    for line in altgrid: #adds the first land point in altgrid as part of an island
+        for elem in line:
+            if elem > L:
+                upto = (altgrid.index(line), line.index(elem))
+                islandlist.append([upto])
+                break
+        break
+      
+
+    for line in altgrid:
+        for elem in line:
+            indexing = (altgrid.index(line), line.index(elem))
+            if indexing != upto:
+                if elem > L:
+                    for island in islandlist:
+                        for point in island:
+                            if abs(indexing[0] - point[0]) < 2 and abs(indexing[1] - point[1]) < 2: #is connected
+                                island.append(indexing)
+                                break
+                            else:
+                                islandlist.append([indexing])
+                            break
+                        break
+            break
+
+    print("The number of separate islands %0.1f metres above sea level is %i" %(L, len(islandlist)))
 
 def main(L, mean_vert, mean_horiz, array): # put everything together!
 
     tier1_disp_result(L, mean_vert_dist, mean_horiz_dist)
     if L == 0:
            tier2_disp_result()
+
+    tier4_island(L, array)
 
 
 def graph_plot(al, pl, approximation): 
@@ -234,46 +280,3 @@ main(sea_rise, mean_vert_dist, mean_horiz_dist, data_array)
 #│ --- Part 4 - islands --- │
 #└──────────────────────────┘
 
-#first, re-arrange the data.
-altgrid = []
-littlelist = [] #used throughout this section as a means of collecting and conveying data
-current_lat = data_array[0][0]
-for line in data_array:
-    if line[0] == current_lat:
-        littlelist.append(line[2])
-    else:
-        altgrid.append(list(littlelist))
-        littlelist = list()
-        current_lat = line[0]
-        littlelist.append(line[2])
-altgrid.append(list(littlelist))
-
-#now, rearrange our points into island groups
-littlelist = []
-islandlist = []
-for line in altgrid: #adds the first land point in altgrid as part of an island
-    for elem in line:
-        if elem > L:
-            upto = (altgrid.index(line), line.index(elem))
-            islandlist.append([upto])
-            break
-    break
-  
-
-for line in altgrid:
-    for elem in line:
-        indexing = (altgrid.index(line), line.index(elem))
-        if indexing != upto:
-            if elem > L:
-                for island in islandlist:
-                    for point in island:
-                        if abs(indexing[0] - point[0]) < 2 and abs(indexing[1] - point[1]) < 2: #is connected
-                            island.append(indexing)
-                            break
-                        else:
-                            islandlist.append([indexing])
-                        break
-                    break
-        break
-
-print("The number of separate islands %0.1f metres above sea level is %i" %(L, len(islandlist)))
